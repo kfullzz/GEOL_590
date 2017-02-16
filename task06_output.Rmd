@@ -1,0 +1,36 @@
+---
+title: "White Oak River Sulfate"
+output: html_WOR_Sulfate
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+Introduction
+
+
+
+```{r}
+library(ggplot2)
+WOR <- read.csv(WOR_Sulfate.csv, header = TRUE, sep = ",")
+
+WOR_Sulfate <- as.data.frame(WOR)
+structure(WOR_Sulfate)
+
+ggplot(WOR_Sulfate, aes(x=Days, y=mM)) +
+  geom_point() +
+  geom_smooth(method=lm, se=FALSE) +
+  ggtitle("Sulfate Concentration in White Oak River Anoxic Enrichment") + 
+  theme(axis.title.x = "Time (Days)", axis.title.y = "Sulfate (mM)")
+
+```
+```{r}
+2-5
+```
+
+```{r}
+#ctrl+alt+i insert new chunk
+```
+
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
