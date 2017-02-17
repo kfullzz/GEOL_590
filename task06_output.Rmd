@@ -1,36 +1,32 @@
 ---
 title: "White Oak River Sulfate"
-output: html_WOR_Sulfate
+output: md_document
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
-Introduction
-
+Introduction:
+The White Oak River (WOR) is an estruine river located along the coast of North Carolina with well characterized predictable geochemical properties. Mud was sampled from the site and then incubated in sealed flasks with no influx of air. As time goes by, the oxygen in the headspace will be consumed eventually making these incubations anoxic with the eventual goal of them going methanogenic. However, these methanogenic conditions cannot be acheived until all of the sulfate has been consumed by subflate reducing bacteria (SRB) in the culture. In order to estimate how long it will take for these indubations to go methanogenic, we can model the loss of sulfate over time and generate a linear regression which will give us a rate of loss which can be used to preduct when the cultures will go methanogenic. Data represents measurements taken weekly between May 20 to July 15, 2016. 
 
 
 ```{r}
 library(ggplot2)
-WOR <- read.csv(WOR_Sulfate.csv, header = TRUE, sep = ",")
-
+#data path in R notebook is where .Rmd is saved; needs to be changed for inputs in different folders
+WOR <- read.csv("../data/WOR_Sulfate.csv", header = TRUE, sep = ",")
+#establish csv file as a dataframe for use in ggplot
 WOR_Sulfate <- as.data.frame(WOR)
 structure(WOR_Sulfate)
-
+#generate a scatter plot of sulfate vs time with linear regression line 
 ggplot(WOR_Sulfate, aes(x=Days, y=mM)) +
   geom_point() +
   geom_smooth(method=lm, se=FALSE) +
-  ggtitle("Sulfate Concentration in White Oak River Anoxic Enrichment") + 
-  theme(axis.title.x = "Time (Days)", axis.title.y = "Sulfate (mM)")
+  ggtitle("Sulfate Concentration in White Oak River Anoxic Enrichment")+
+  xlab("Time (Days)") + 
+  ylab("Sulfate (mM)")
+
+#Calculate regression to determine rate of sulfate loss
+#Why do I have to present it as y ~ x to get the proper line?
+WOR_Sulfate_Rate <- lm(formula = mM ~ Days, WOR_Sulfate)
+print (WOR_Sulfate_Rate)
 
 ```
-```{r}
-2-5
-```
-
-```{r}
-#ctrl+alt+i insert new chunk
-```
-
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+Results/Discussion:
+The goal of this analysis was to analyze sulfate data from anoxic WOR incubations in order to estimate how long until the incubations go methanogenic. With the analyzed data, we are seeing sulfate loss at a rate of -0.03582mM/day, or a rate of about 1mM/month. Given this rate, we would not expect the sulfate in the incubations to be fully depleated until about May 2017. However, there are limitations to the presented linear model. While most of the data points from a given timepoint generally cluster around each other, the data from Day 21 is scattered, which likely skews the model. Removing the anomalous data points may help generate a more accurate model. 
