@@ -1,0 +1,113 @@
+---
+title: "Task 7 - Tidyverse"
+output: html_notebook
+---
+To Do:
+-Tables for weather data
+-Select 26-29 most common baby names
+
+```{r}
+library(tidyverse)
+library(dplyr)
+install.packages("nycflights13")
+install.packages("babynames")
+```
+
+Using the nycflights13::weather:
+
+1) Determine whether there are any clear outliers in wind speed (wind_speed) that should be rejected. If so, filter those bad point(s) and proceed.
+What direction has the highest median speed at each airport? Make a table and a plot of median wind speed by direction, for each airport. 
+```{r}
+nycflights13::weather %>%
+  #determine outliers by graphing it
+ggplot(aes(x=month, y=wind_speed)) +
+  geom_point()
+  #there is a clear outlier at the top, manually set filter
+weather %>% 
+  filter(wind_speed < 250) %>%
+  group_by(origin, wind_dir)%>%
+  summarise(med_windspeed = median(wind_speed))%>%
+  top_n(1)
+#plot median wind speed by direction by airport
+weather %>% 
+  filter(wind_speed < 250) %>%
+  group_by(origin, wind_dir)%>%
+  summarise(med_windspeed = median(wind_speed))%>%
+  ggplot(aes(x=wind_dir, y=med_windspeed)) +
+    geom_point() +
+    facet_wrap(~origin)
+#NEED TO MAKE TABLES
+```
+Using nycflights13::flights and nycflights13::airlines:
+
+2) Make a table with two columns: airline name (not carrier code) and median distance flown from JFK airport. The table should be arranged in order of decreasing mean flight distance. Hint: use a _join function to join flights and airlines.
+```{r}
+nycflights13::flights  %>%
+  filter(origin == "JFK") %>%
+  select(carrier, origin, distance) %>%
+  group_by(carrier) %>%
+  summarise(med_distance = median(distance)) %>%
+  left_join(nycflights13::airlines, by="carrier")  %>%
+  select(name, med_distance) %>%
+  arrange(desc(med_distance))
+```
+
+Using nycflights13::flights and nycflights13::airlines:
+3) Make a wide-format data frame that displays the number of flights that leave Newark ("EWR") airport each month, from each airline
+```{r}
+nycflights13::flights %>%
+  filter(origin == "EWR") %>%
+  select(origin, carrier, month) %>%
+  group_by(carrier, month) %>%
+  summarise(Flights = n()) %>%
+  left_join(nycflights13::airlines, by="carrier") %>%
+  select(name, month, Flights) %>%
+#why does this work???????
+  #spread(new columns, what to populate them with)
+  spread(month, Flights)
+```
+
+Using the babynames dataset:
+4) Identify the ten most common male and female names in 2014. Make a plot of their frequency (prop) since 1880. (This may require two separate piped statements).
+
+```{r}
+#identify top 10 male names in 2014
+babynames::babynames %>%
+  filter(sex=="M", year == "2014") %>%
+  top_n(10) %>%
+  select(name) %>%
+#what makes left join different from right join --> not quite sure why this works but it does
+  left_join(babynames::babynames, by = "name") %>%
+#refilter because Noah is a M and F name
+  filter(sex=="M") %>%
+  ggplot(aes(x=year, y=prop)) +
+    geom_point() +
+    ggtitle("Frequency of 2014 Top Male Baby Names Over Time") +
+    facet_wrap("name")
+  
+#identify top 10 female names in 2014
+babynames::babynames %>%
+  filter(sex == "F", year == "2014") %>%
+  top_n(10) %>%
+  select(name) %>%
+  left_join(babynames::babynames, by = "name") %>%
+  filter(sex == "F") %>%
+  ggplot(aes(x=year, y=prop)) +
+    geom_point() +
+    ggtitle("Frequency of 2014 Top Female Baby Names Over Time") +
+    facet_wrap("name")
+```
+Using the babynames dataset:
+5) Make a single table of the 26th through 29th most common girls names in the year 1896, 1942, and 2016
+```{r}
+babynames::babynames %>%
+  filter(sex == "F", year == "1896"| year == "1942"| year == "2016") %>%
+  select(year, name, n) %>%
+  group_by(year) %>%
+#Figure out why this works... Select the first 29 instances based on n
+  top_n(29, n) %>%
+#Then from those 29, the bottom 4 rows would be 26-29
+  top_n(-4, n) %>%
+  print()
+#no data from 2016
+```
