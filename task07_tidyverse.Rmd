@@ -119,3 +119,28 @@ babynames::babynames %>%
   print()
 #no data from 2016
 ```
+
+Data Wrangling Code:
+Using the fueleconomy::vehicles data set complete the following:
+
+1) Compute the mean highway milage (hwy) of all Toyota models each year and plot this data
+```{r}
+library(fueleconomy)
+fueleconomy::vehicles %>%
+  filter(make == "Toyota") %>%
+  group_by(year) %>%
+  summarise(mean = mean(hwy)) %>%
+  ggplot(aes(x=year, y=mean)) +
+    geom_point() +
+    ggtitle("Mean Highway MPG of Toyota Cars Over Time")
+```
+2) For the years 1964, 1993, and 2006, determine the most city fuel efficient car model for each make
+```{r}
+library(fueleconomy)
+fueleconomy::vehicles %>%
+  filter(year == 1964| year == 1993|year == 2006) %>%
+  select(make, model, year, cty) %>%
+  group_by(make, year)  %>%
+  top_n(1, cty)
+```
+

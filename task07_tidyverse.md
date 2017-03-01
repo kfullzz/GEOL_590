@@ -232,3 +232,48 @@ Using the babynames dataset: 5) Make a single table of the 26th through
     ## 8  1942  Martha  9513
 
     #no data from 2016
+
+Data Wrangling Code: Using the fueleconomy::vehicles data set complete
+the following:
+
+1.  Compute the mean highway milage (hwy) of all Toyota models each year
+    and plot this data
+
+<!-- -->
+
+    library(fueleconomy)
+    fueleconomy::vehicles %>%
+      filter(make == "Toyota") %>%
+      group_by(year) %>%
+      summarise(mean = mean(hwy)) %>%
+      ggplot(aes(x=year, y=mean)) +
+        geom_point() +
+        ggtitle("Mean Highway MPG of Toyota Cars Over Time")
+
+![](task07_tidyverse_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+2) For the years 1964, 1993, and 2006, determine the most city fuel
+efficient car model for each make
+
+    library(fueleconomy)
+    fueleconomy::vehicles %>%
+      filter(year == 1964| year == 1993|year == 2006) %>%
+      select(make, model, year, cty) %>%
+      group_by(make, year)  %>%
+      top_n(1, cty)
+
+    ## Source: local data frame [207 x 4]
+    ## Groups: make, year [99]
+    ## 
+    ##                 make          model  year   cty
+    ##                <chr>          <chr> <int> <int>
+    ## 1              Acura        Integra  1993    22
+    ## 2              Acura            RSX  2006    24
+    ## 3         Alfa Romeo         Spider  1993    19
+    ## 4         Alfa Romeo         Spider  1993    19
+    ## 5       Aston Martin     V8 Vantage  2006    12
+    ## 6       Aston Martin Virage/Volante  1993    11
+    ## 7               Audi             90  1993    18
+    ## 8               Audi             A3  2006    22
+    ## 9  Autokraft Limited    A.C.MARK IV  1993    13
+    ## 10               BMW     318i/318is  1993    19
+    ## # ... with 197 more rows
