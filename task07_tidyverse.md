@@ -15,6 +15,7 @@ To Do: -Tables for weather data -Select 26-29 most common baby names
     ## lag():    dplyr, stats
 
     library(dplyr)
+    #comment out install.packages before knitting
     #install.packages("nycflights13")
     #install.packages("babynames")
 
@@ -63,34 +64,36 @@ Using the nycflights13::weather:
     ## 9     LGA      270      13.80936
     ## 10    LGA      290      13.80936
 
-    #plot median wind speed by direction by airport
+    #table median wind speed by direction by airport
     nycflights13::weather %>% 
       filter(wind_speed < 250) %>%
       group_by(origin, wind_dir)%>%
       summarise(med_windspeed = median(wind_speed))%>%
-      #table
-      print() %>%
-      #plot
+      spread(origin, med_windspeed)
+
+    ## # A tibble: 38 × 4
+    ##    wind_dir      EWR     JFK     LGA
+    ## *     <dbl>    <dbl>   <dbl>   <dbl>
+    ## 1         0  0.00000 0.00000 0.00000
+    ## 2        10  9.20624 8.05546 9.20624
+    ## 3        20  9.20624 9.20624 8.05546
+    ## 4        30  9.20624 9.20624 9.20624
+    ## 5        40 10.35702 9.20624 8.63085
+    ## 6        50  8.05546 8.05546 9.20624
+    ## 7        60  8.05546 7.48007 9.20624
+    ## 8        70  6.90468 8.05546 8.05546
+    ## 9        80  6.90468 8.63085 8.05546
+    ## 10       90  6.32929 9.20624 6.90468
+    ## # ... with 28 more rows
+
+    #plot
+    nycflights13::weather %>%
+      filter(wind_speed < 250) %>%
+      group_by(origin, wind_dir) %>%
+      summarise(med_windspeed = median(wind_speed)) %>%
       ggplot(aes(x=wind_dir, y=med_windspeed)) +
         geom_point() +
         facet_wrap(~origin)
-
-    ## Source: local data frame [114 x 3]
-    ## Groups: origin [?]
-    ## 
-    ##    origin wind_dir med_windspeed
-    ##     <chr>    <dbl>         <dbl>
-    ## 1     EWR        0       0.00000
-    ## 2     EWR       10       9.20624
-    ## 3     EWR       20       9.20624
-    ## 4     EWR       30       9.20624
-    ## 5     EWR       40      10.35702
-    ## 6     EWR       50       8.05546
-    ## 7     EWR       60       8.05546
-    ## 8     EWR       70       6.90468
-    ## 9     EWR       80       6.90468
-    ## 10    EWR       90       6.32929
-    ## # ... with 104 more rows
 
     ## Warning: Removed 3 rows containing missing values (geom_point).
 

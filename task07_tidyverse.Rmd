@@ -9,6 +9,7 @@ To Do:
 ```{r}
 library(tidyverse)
 library(dplyr)
+#comment out install.packages before knitting
 #install.packages("nycflights13")
 #install.packages("babynames")
 ```
@@ -29,17 +30,21 @@ nycflights13::weather %>%
   summarise(med_windspeed = median(wind_speed))%>%
   #top median wind speeds per airport and direction
   top_n(1)
-#plot median wind speed by direction by airport
+#table median wind speed by direction by airport
 nycflights13::weather %>% 
   filter(wind_speed < 250) %>%
   group_by(origin, wind_dir)%>%
   summarise(med_windspeed = median(wind_speed))%>%
-  #table
-  print() %>%
-  #plot
+  spread(origin, med_windspeed)
+#plot
+nycflights13::weather %>%
+  filter(wind_speed < 250) %>%
+  group_by(origin, wind_dir) %>%
+  summarise(med_windspeed = median(wind_speed)) %>%
   ggplot(aes(x=wind_dir, y=med_windspeed)) +
     geom_point() +
     facet_wrap(~origin)
+  
 ```
 Using nycflights13::flights and nycflights13::airlines:
 
