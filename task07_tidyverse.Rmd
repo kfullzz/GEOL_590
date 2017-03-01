@@ -1,6 +1,6 @@
 ---
 title: "Task 7 - Tidyverse"
-output: html_notebook
+output: md_document
 ---
 To Do:
 -Tables for weather data
@@ -9,8 +9,8 @@ To Do:
 ```{r}
 library(tidyverse)
 library(dplyr)
-install.packages("nycflights13")
-install.packages("babynames")
+#install.packages("nycflights13")
+#install.packages("babynames")
 ```
 
 Using the nycflights13::weather:
