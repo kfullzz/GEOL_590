@@ -1,0 +1,64 @@
+---
+title: "Week08_functions"
+output: md_document
+---
+If the columns to add aren't valid but the new column name is, the function should create a column of NA values
+
+```{r}
+#Establish environment and load relevant packages
+setwd("C:/Katie/University_of_Tennessee/GEOL_590/R")
+library(tidyverse)
+library(ggplot2)
+
+#create a function called col_add
+#df = data frame to be used, x and y are the columns, name is the new name of the column
+col_add <- function(df, x, y, name) {
+#add warning if input is not dataframe and stop function
+  if (class(df) != "dataframe")
+    stop("Fatal Error: You need a data frame dummy")
+  
+#add warning if columns are not numeric
+  if (x != "numeric" | y != "numeric")
+    warning("The columns specified are not numeric")
+  
+#add tryCatch to function  
+  tryCatch(
+    df %>%
+#generate a new column "name" that is the sum of the specificed columns "x and y"
+    mutate(name, sum(x, y)),
+    warning=function(w){
+      message("Some of the specified values are non-numeric")
+      return(NA)
+    }
+  
+  )
+  
+  
+
+  #try to add command that would add NA to new column
+}
+```
+
+Write a function named that uses a for loop to calculate the sum of the elements of a vector, which is passed as an argument (i.e., it should do the same thing that sum() does with vectors). your_fun(1:10^4) should return 50005000.
+```{r}
+library(microbenchmark)
+
+test.vec <- 1:10^4
+#need to tell the function to add each value to its neighbor
+my_sum <- function(x) {
+  y <- 0
+  for (i in x) {
+  #redefine y with each loop, adding the next number (i) to it
+    y <- y + i
+  }
+  return(y)
+}
+my_sum(test.vec)
+
+print(microbenchmark(
+  my_sum(test.vec), 
+  sum(test.vec)
+))
+```
+
+Is there a difference? Why?
