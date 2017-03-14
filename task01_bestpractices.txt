@@ -1,0 +1,49 @@
+170111 - introduction
+	Excel --> Formula --> Trace Dependence
+		Track where the data for a particular cell comes from
+	Group: Katie Sipes, Mariah, and Rachel
+	Task 1:
+		Read the posted powerpoints, 
+Best Practices for Reproducible Data Analysis
+	Repetition --> whether you do it again or someone else
+	Limited by teh fact that there are so many different packages/software programs that can be used --> uniform
+	Shared, pubilcally available respositories
+	Deal with reproducing the data earlier on --> by the time you get to publication no one is going to go back and do it
+	Diversity in tools that can be utilized amongst different disciplines/types of data
+	Adpotion of common tools, standards, and procedures
+	Development of community driven processes --> people contributing at different levels to better the product
+	Version control systems (VCS)
+		Ie Git --> store files in a respository, creates a log to track changes
+		Linear or branched
+		Allows for a "fingerprint" to be generated with each new iteration of the code
+			Can compare fingerpritns to see where different version differ
+				INTEGRITY
+	Execution Automation
+		Knowing that certain steps in analysis will depend on input from a previous one, you should be able to automate some of the steps including checking whether changes to previous files were made, thereby prompting reimplementation of the code
+			This also applies to DVCS systems, where pulls can be automatically tested and a report put out so that any issues can be identified and adressed ASAP
+	Comprehensive Testing
+		Debugging ASAP
+		Make sure to implement testing protocols at multiple steps
+			Ie checking whether the input is what is expects to receive
+			Unit tests --> ensure individual coding elements behave correctly
+				Shift thinking from how code does something to what you want it to do
+	READABILITY
+		Consistent naming convetions
+		Commenting
+			Purpose, input/output, 
+	Backups --> Synchronize/merge work between local and server locations
+	Distributed Version Control
+		Unlike VCSs, every respository contains the entire history of a project (not just on a single server)
+			aka Automatic backups, can also merge cloned versions of projects if desired
+	Interactive Environments
+		Find platforms/interfaces that allow for all stages of the research cycle (initial exploration --> publication of data)
+			This is important when you potentially need to switch between languages to perform different tasks of analysis
+	Parallel Analyses!!! --> The importance of the cloud
+Authors Conclusions of what's Required
+	Sharing of software/data/knowledge
+	Documentation of readable software that's tested and validated
+	Increased computational literacy
+	Collaborative development of open-source software tools
+	
+			
+	 
