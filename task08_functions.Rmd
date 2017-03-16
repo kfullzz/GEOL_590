@@ -2,41 +2,73 @@
 title: "Week08_functions"
 output: md_document
 ---
-If the columns to add aren't valid but the new column name is, the function should create a column of NA values
+Functioning Function:
+```{r}
+col_add <- function(df, x, y, name) {
+    mutate_call = lazyeval::interp(~ a + b, a = as.name(x), b = as.name(y))
+    df %>%
+      mutate_(.dots = setNames(list(mutate_call), name))
+}
 
+test_data <- read.csv("test_data.csv")
+
+col_add(test_data, "Apples", "Oranges", "Fruit")
+```
+
+Attempt to add TryCatch
+```{r}
+col_add <- function(df, x, y, name) {
+    tryCatch(
+      {  
+      mutate_call = lazyeval::interp(~ a + b, a = as.name(x), b = as.name(y))
+      df %>%
+        mutate_(.dots = setNames(list(mutate_call), name))
+      warning=function(w){
+        warning("Some of the specified values are non-numeric")
+        return(NA)
+        }
+      }
+    )
+  return()
+}
+
+test_data <- read.csv("test_data.csv")
+
+col_add(test_data, "Apples", "Oranges", "Fruit")
+```
+Atempt to add additional error messages
 ```{r}
 #Establish environment and load relevant packages
 setwd("C:/Katie/University_of_Tennessee/GEOL_590/R")
 library(tidyverse)
 library(ggplot2)
+library(lazyeval)
 
 #create a function called col_add
 #df = data frame to be used, x and y are the columns, name is the new name of the column
 col_add <- function(df, x, y, name) {
 #add warning if input is not dataframe and stop function
   if (class(df) != "dataframe")
-    stop("Fatal Error: You need a data frame dummy")
-  
-#add warning if columns are not numeric
+   stop("Fatal Error: You need a data frame dummy")
+  #add warning if columns are not numeric
   if (x != "numeric" | y != "numeric")
-    warning("The columns specified are not numeric")
+   warning("The columns specified are not numeric")
   
 #add tryCatch to function  
   tryCatch(
+    mutate_call = lazyeval::interp(~ a + b, a = as.name(x), b = as.name(y)),
     df %>%
-#generate a new column "name" that is the sum of the specificed columns "x and y"
-    mutate(name, sum(x, y)),
+      mutate_(.dots = setNames(list(mutate_call), name)),
     warning=function(w){
-      message("Some of the specified values are non-numeric")
-      return(NA)
+     message("Some of the specified values are non-numeric")
+    return(NA)
     }
-  
   )
-  
-  
-
-  #try to add command that would add NA to new column
 }
+
+test_data <- read.csv("test_data.csv")
+
+col_add(test_data, "Apples", "Oranges", "Fruit")
 ```
 
 Write a function named that uses a for loop to calculate the sum of the elements of a vector, which is passed as an argument (i.e., it should do the same thing that sum() does with vectors). your_fun(1:10^4) should return 50005000.
