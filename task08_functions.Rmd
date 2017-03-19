@@ -2,8 +2,10 @@
 title: "Week08_functions"
 output: md_document
 ---
-Functioning Function:
+Functioning Function w/ Pipes:
 ```{r}
+library(dplyr)
+
 col_add <- function(df, x, y, name) {
     mutate_call = lazyeval::interp(~ a + b, a = as.name(x), b = as.name(y))
     df %>%
@@ -21,7 +23,7 @@ col_add <- function(df, x, y, name) {
     tryCatch(
       {  
       mutate_call = lazyeval::interp(~ a + b, a = as.name(x), b = as.name(y))
-      df %>%
+      df <- df %>%
         mutate_(.dots = setNames(list(mutate_call), name))
       warning=function(w){
         warning("Some of the specified values are non-numeric")
@@ -29,7 +31,7 @@ col_add <- function(df, x, y, name) {
         }
       }
     )
-  return()
+  return(df)
 }
 
 test_data <- read.csv("test_data.csv")
@@ -48,27 +50,34 @@ library(lazyeval)
 #df = data frame to be used, x and y are the columns, name is the new name of the column
 col_add <- function(df, x, y, name) {
 #add warning if input is not dataframe and stop function
-  if (class(df) != "dataframe")
+  if (class(df) != "data.frame") {
    stop("Fatal Error: You need a data frame dummy")
-  #add warning if columns are not numeric
-  if (x != "numeric" | y != "numeric")
+  }
+  #add warning if columns are not numeric; ie column of letters
+  if (is.numeric(df$x) == FALSE | is.numeric(df$x) == FALSE) {
    warning("The columns specified are not numeric")
+  }
   
 #add tryCatch to function  
   tryCatch(
-    mutate_call = lazyeval::interp(~ a + b, a = as.name(x), b = as.name(y)),
-    df %>%
-      mutate_(.dots = setNames(list(mutate_call), name)),
-    warning=function(w){
-     message("Some of the specified values are non-numeric")
-    return(NA)
+      {  
+      mutate_call = lazyeval::interp(~ a + b, a = as.name(x), b = as.name(y))
+      df <- df %>%
+        mutate_(.dots = setNames(list(mutate_call), name))
+      warning=function(w){
+        message("Some of the specified values are non-numeric")
+        return(NA)
+        }
+      }
+    )
+  return(df)
     }
-  )
-}
 
 test_data <- read.csv("test_data.csv")
+str(test_data)
 
-col_add(test_data, "Apples", "Oranges", "Fruit")
+
+col_add(test_data, "Set", "Oranges", "Fruit")
 ```
 
 Write a function named that uses a for loop to calculate the sum of the elements of a vector, which is passed as an argument (i.e., it should do the same thing that sum() does with vectors). your_fun(1:10^4) should return 50005000.
